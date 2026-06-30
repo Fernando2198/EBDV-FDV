@@ -1,0 +1,16 @@
+spring.application.name=ebdv-fdv
+
+# Configuracon de la base de datos PostgreSQL plantilla
+spring.datasource.url=jdbc:postgresql://localhost:5432/ebdv_fdv_db
+spring.datasource.username=TU_USUARIO_AQUI
+spring.datasource.password=TU_PASS_AQUI
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Configuración de JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# Habiliar la recarga de Thymeleaf en desarrollo
+spring.thymeleaf.cache=false

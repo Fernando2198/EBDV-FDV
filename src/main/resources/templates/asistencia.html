@@ -1,0 +1,61 @@
+<div th:replace="~{base:: html}" xmlns:th="http://www.thymeleaf.org">
+
+  <div th:fragment="content" class="max-w-6xl mx-auto space-y-6">
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-200 pb-5">
+      <div>
+        <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Control de Asistencia</h1>
+        <p class="text-sm text-gray-500 mt-1">Registra la asistencia diaria haciendo un toque en las casillas.</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <label class="text-sm font-medium text-gray-600 whitespace-nowrap">Grupo:</label>
+        <select class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+          <option value="">Todos los grupos</option>
+          <option value="Preescolar">Preescolar</option>
+          <option value="Primaria Menor">Primaria Menor</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse align-middle">
+          <thead class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+          <tr>
+            <th class="py-4 px-6 text-center w-16">#</th>
+            <th class="py-4 px-6">Nombre del Alumno</th>
+            <th class="py-4 px-4 text-center w-24">Lun</th>
+            <th class="py-4 px-4 text-center w-24">Mar</th>
+            <th class="py-4 px-4 text-center w-24">Mié</th>
+            <th class="py-4 px-4 text-center w-24">Jue</th>
+            <th class="py-4 px-4 text-center w-24">Vie</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 text-sm text-gray-700 font-medium">
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="py-4 px-6 text-center text-gray-400 font-mono">1</td>
+            <td class="py-4 px-6">
+              <div class="font-semibold text-gray-900">Pérez, Pedrito</div>
+              <div class="text-xs text-gray-400 font-normal mt-0.5">Primaria Menor</div>
+            </td>
+            <td class="py-4 px-4 text-center"><input type="checkbox" class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500"></td>
+            <td class="py-4 px-4 text-center"><input type="checkbox" class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500"></td>
+            <td class="py-4 px-4 text-center"><input type="checkbox" class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500"></td>
+            <td class="py-4 px-4 text-center"><input type="checkbox" class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500"></td>
+            <td class="py-4 px-4 text-center"><input type="checkbox" class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex justify-end pt-2">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm">
+        <i class="bi bi-cloud-arrow-up text-base"></i>
+        <span>Guardar Asistencia</span>
+      </button>
+    </div>
+
+  </div>
+</div>

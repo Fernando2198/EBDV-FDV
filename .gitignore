@@ -1,0 +1,45 @@
+HELP.md
+target/
+out/
+.gradle/
+bin/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.log
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Archivos de configuración del Sistema Operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+###Archivo para la conf de la base de datos ###
+src/main/resources/application.properties
