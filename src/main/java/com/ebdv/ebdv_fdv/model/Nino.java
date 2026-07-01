@@ -18,7 +18,16 @@ public class Nino {
     @Column(columnDefinition = "TEXT")
     private String notasAdicionales;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column
+    private boolean activo = true;
+
+    //Metodo automático al insertar en la DB
+    @PrePersist
+    protected void onCreate() {
+        this.activo = true;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor;
 
@@ -69,4 +78,8 @@ public class Nino {
     public void setTutor(Tutor tutor) {
         this.tutor = tutor;
     }
+
+    public boolean getActivo() {return activo;}
+
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

@@ -1,6 +1,99 @@
 <div th:replace="~{base :: html}" xmlns:th="http://www.thymeleaf.org">
-  <div th:fragment="content" class="max-w-6xl mx-auto space-y-6">
 
-    <h1 class="text-3xl font-semibold text-gray-900">Registro de alumnos</h1>
+  <div th:fragment="content" class="max-w-3xl mx-auto space-y-6">
+
+    <div class="border-b border-gray-200 pb-4">
+      <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Registro de Nuevo Participante</h1>
+      <p class="text-sm text-gray-500 mt-1">Ingresa los datos del niño y la información de contacto de su tutor.</p>
+    </div>
+
+    <form th:action="@{/registro/guardar}" th:object="${nino}" method="POST" class="space-y-6">
+
+      <input type="hidden" th:field="*{id}" />
+      <input type="hidden" th:field="*{tutor.id}" />
+
+
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 class="text-lg font-semibold text-blue-600 flex items-center gap-2">
+          <i class="bi bi-person-badge"></i> Datos del Niño
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+            <input type="text" th:field="*{nombreCompleto}" required placeholder="Por apellidos y nombre(s)"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Edad</label>
+            <input type="number" th:field="*{edad}" required min="0" max="17" placeholder="Años"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Grupo Asignado</label>
+          <select th:field="*{grupo}" required
+                  class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            <option value="">Selecciona un grupo...</option>
+            <option value="Preescolar">Preescolar</option>
+            <option value="Primaria Menor">Primaria Menor</option>
+            <option value="Primaria Mayor">Primaria Mayor</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Notas Médicas o Adicionales (Opcional)</label>
+          <textarea th:field="*{notasAdicionales}" rows="2" placeholder="Alergias, indicaciones especiales, etc..."
+                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 class="text-lg font-semibold text-emerald-600 flex items-center gap-2">
+          <i class="bi bi-people"></i> Información del Tutor
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo del Tutor</label>
+            <input type="text" th:field="*{tutor.nombreCompleto}" required placeholder="Padre, madre o guardián"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono de Contacto</label>
+            <input type="tel" th:field="*{tutor.telefono}" required placeholder="10 dígitos para emergencias"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Correo del tutor</label>
+            <input type="text" th:field="*{tutor.correo}" required placeholder="ejemplo@gmail.com"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Red Social(Instagram, Facebook...)</label>
+            <input type="tel" th:field="*{tutor.redSocial}" required placeholder="red_social"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <a th:href="@{/}" class="border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-6 py-2.5 rounded-xl text-sm transition-all">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm text-sm transition-all flex items-center gap-2">
+          <i class="bi bi-check-circle"></i>
+          <span>Finalizar Registro</span>
+        </button>
+      </div>
+    </form>
+
   </div>
 </div>
