@@ -2,6 +2,8 @@ package com.ebdv.ebdv_fdv.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "ninos")
 public class Nino {
@@ -21,10 +23,18 @@ public class Nino {
     @Column
     private boolean activo = true;
 
+    @OneToMany(mappedBy = "nino", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Asistencia> asistencias;
+
     //Metodo automático al insertar en la DB
     @PrePersist
     protected void onCreate() {
         this.activo = true;
+    }
+
+    public boolean tieneAsistencia (String dia) {
+        if (this.asistencias == null) return false;
+        return this.asistencias.stream().anyMatch(a -> a.getDiaSemana().equalsIgnoreCase(dia) && a.isAsistio());
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -82,4 +92,9 @@ public class Nino {
     public boolean getActivo() {return activo;}
 
     public void setActivo(boolean activo) { this.activo = activo; }
+
+    public List<Asistencia> getAsistencia() {return asistencias;}
+
+    public void setAsistencias(List<Asistencia> asistencias) {this.asistencias = asistencias;}
+
 }

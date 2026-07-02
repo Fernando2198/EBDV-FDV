@@ -1,9 +1,11 @@
 package com.ebdv.ebdv_fdv.controller;
 
+import com.ebdv.ebdv_fdv.model.Asistencia;
 import com.ebdv.ebdv_fdv.model.Nino;
 import com.ebdv.ebdv_fdv.model.Tutor;
 import com.ebdv.ebdv_fdv.repository.NinoRepository;
 import com.ebdv.ebdv_fdv.repository.TutorRepository;
+import com.ebdv.ebdv_fdv.repository.AsistenciaRepository;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Controller
 public class AppController {
@@ -24,6 +28,9 @@ public class AppController {
 
     @Autowired
     private TutorRepository tutorRepository;
+
+    @Autowired
+    private AsistenciaRepository asistenciaRepository;
 
     @GetMapping("/")
     public String inicio(Model model) {
@@ -88,5 +95,38 @@ public class AppController {
     }
 
     @GetMapping("/asistencia")
-    public String asistencia() { return "asistencia"; }
+    public String asistencia(Model model) {
+        List<Nino> ninosOrdenados = ninoRepository.findAll().stream().
+                filter(Nino::getActivo)
+                .sorted((n1, n2) -> n1.getNombreCompleto().compareToIgnoreCase(n2.getNombreCompleto()))
+                .collect(Collectors.toList());
+        model.addAttribute("ninos", ninosOrdenados);
+        return "asistencia";
+    }
+
+    @PostMapping("/asistencia/guardar")
+    public String guardarAsistencia(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        asistenciaRepository.deleteAll();
+
+        for(String paramName : parameterMap.keySet()) {
+            if (paramName.startsWith("asistencia_")) {
+                String[] partes = paramName.split("_");
+                Long ninoId = Long.parseLong(partes[1]);
+                String diaSemana = partes[2];
+
+                Nino nino = ninoRepository.findById(ninoId).orElse(null);
+                if(nino != null) {
+                    Asistencia nuevaAsistencia = new Asistencia(nino, diaSemana, true);
+                    asistenciaRepository.save(nuevaAsistencia);
+                }
+            }
+        }
+        redirectAttributes.addFlashAttribute("registroExitoso", true);
+        redirectAttributes.addFlashAttribute("mensaje", "El control de asistencia se actualizo correctamente");
+
+        return "redirect:/asistencia";
+    }
+
+
 }
