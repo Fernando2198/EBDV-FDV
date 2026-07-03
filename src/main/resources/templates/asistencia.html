@@ -46,7 +46,7 @@
     </div>
 
 
-    <div x-data="{ grupoSeleccionado: '' }" class="space-y-6">
+    <div x-data="{ grupoSeleccionado: '', busqueda: '' }" class="space-y-6">
 
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-200 pb-5">
         <div>
@@ -59,10 +59,22 @@
           <select x-model="grupoSeleccionado"
                   class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
             <option value="">Todos los grupos</option>
-            <option value="Preescolar">Preescolar</option>
-            <option value="Primaria Menor">Primaria Menor</option>
-            <option value="Primaria Mayor">Primaria Mayor</option>
+            <option value="Preescolares">Preescolares</option>
+            <option value="Escolares">Escolares</option>
+            <option value="Jóvenes">Jóvenes</option>
           </select>
+        </div>
+      </div>
+
+      <div class="p-4 border border-gray-200 rounded-2xl bg-gray-50/50 flex items-center max-w-md">
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-gray-400">
+            <i class="bi bi-search text-sm"></i>
+          </div>
+          <input type="text"
+                 x-model="busqueda"
+                 placeholder="Buscar alumno por nombre en este grupo..."
+                 class="w-full bg-white border border-gray-300 rounded-xl ps-10 pe-4 py-2 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
         </div>
       </div>
 
@@ -93,7 +105,8 @@
 
               <tr th:each="nino, iter : ${ninos}"
                   th:data-grupo="${nino.grupo}"
-                  x-show="grupoSeleccionado === '' || grupoSeleccionado.trim().toLowerCase() === $el.getAttribute('data-grupo').trim().toLowerCase()"
+                  th:data-nombre="${nino.nombreCompleto}"
+                  x-show="(grupoSeleccionado === '' || grupoSeleccionado.trim().toLowerCase() === $el.getAttribute('data-grupo').trim().toLowerCase()) && (busqueda === '' || $el.getAttribute('data-nombre').toLowerCase().includes(busqueda.toLowerCase().trim()))"
                   x-transition:enter="transition ease-out duration-200"
                   x-transition:enter-start="opacity-0 transform -translate-y-1"
                   x-transition:enter-end="opacity-100 transform translate-y-0"
