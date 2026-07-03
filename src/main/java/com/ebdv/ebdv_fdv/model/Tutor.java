@@ -16,6 +16,9 @@ public class Tutor {
     @Column(nullable = false, length = 20)
     private String telefono;
 
+    @Column
+    private String direccion;
+
     private String correo;
     private String redSocial;
 
@@ -58,4 +61,8 @@ public class Tutor {
     public void setRedSocial(String redSocial) {
         this.redSocial = redSocial;
     }
+
+    public String getDireccion() {return direccion;}
+
+    public void setDireccion(String direccion) {this.direccion = direccion;}
 }

@@ -2,97 +2,149 @@
 
   <div th:fragment="content" class="max-w-6xl mx-auto space-y-6">
 
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-200 pb-5">
-      <div>
-        <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Control de Asistencia</h1>
-        <p class="text-sm text-gray-500 mt-1">Registra la asistencia diaria haciendo un toque en las casillas.</p>
-      </div>
+    <div th:if="${registroExitoso}"
+         x-data="{ show: true }"
+         x-show="show"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4">
 
-      <div class="flex items-center gap-3">
-        <label class="text-sm font-medium text-gray-600 whitespace-nowrap">Grupo:</label>
-        <select class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
-          <option value="">Todos los grupos</option>
-          <option value="Preescolar">Preescolar</option>
-          <option value="Primaria Menor">Primaria Menor</option>
-          <option value="Primaria Mayor">Primaria Mayor</option>
-        </select>
+      <div x-show="show"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
+           x-transition:leave="transition ease-in duration-200"
+           x-transition:leave-start="opacity-100"
+           x-transition:leave-end="opacity-0"
+           class="fixed inset-0 bg-black/40 backdrop-blur-sm"
+           @click="show = false"></div>
+
+      <div x-show="show"
+           x-init="setTimeout(() => show = false, 3500)"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+           x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+           x-transition:leave="transition ease-in duration-200"
+           x-transition:leave-start="opacity-100 scale-100"
+           x-transition:leave-end="opacity-0 scale-95"
+           class="relative bg-white border border-gray-100 rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center space-y-4 z-10 border-t-4 border-t-blue-500">
+
+        <div class="bg-blue-50 text-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-inner">
+          <i class="bi bi-cloud-check-fill text-3xl"></i>
+        </div>
+
+        <div class="space-y-1">
+          <h3 class="text-lg font-bold text-gray-900">¡Asistencia Guardada!</h3>
+          <p class="text-sm text-gray-500" th:text="${mensaje}">El control de asistencia se actualizó correctamente.</p>
+        </div>
+
+        <div class="pt-2">
+          <button @click="show = false"
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-colors shadow-sm">
+            Listo
+          </button>
+        </div>
       </div>
     </div>
 
-    <form th:action="@{/asistencia/guardar}" method="POST" class="space-y-6">
 
-      <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse align-middle">
-            <thead class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            <tr>
-              <th class="py-4 px-6 text-center w-16">#</th>
-              <th class="py-4 px-6">Nombre del Alumno</th>
-              <th class="py-4 px-4 text-center w-24">Lun</th>
-              <th class="py-4 px-4 text-center w-24">Mar</th>
-              <th class="py-4 px-4 text-center w-24">Mié</th>
-              <th class="py-4 px-4 text-center w-24">Jue</th>
-              <th class="py-4 px-4 text-center w-24">Vie</th>
-            </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 text-sm text-gray-700 font-medium">
+    <div x-data="{ grupoSeleccionado: '' }" class="space-y-6">
 
-            <tr th:if="${#lists.isEmpty(ninos)}">
-              <td colspan="7" class="py-10 text-center text-gray-400">
-                <i class="bi bi-people text-3xl block mb-2"></i>
-                No hay niños activos registrados para el pase de lista.
-              </td>
-            </tr>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-200 pb-5">
+        <div>
+          <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Control de Asistencia</h1>
+          <p class="text-sm text-gray-500 mt-1">Registra la asistencia diaria haciendo un toque en las casillas.</p>
+        </div>
 
-            <tr th:each="nino, iter : ${ninos}" class="hover:bg-slate-50/80 transition-colors">
-
-              <td class="py-4 px-6 text-center text-gray-400 font-mono" th:text="${iter.count}">1</td>
-
-              <td class="py-4 px-6">
-                <div class="font-semibold text-gray-900" th:text="${nino.nombreCompleto}">Nombre del Alumno</div>
-                <div class="text-xs text-gray-400 font-normal mt-0.5" th:text="${nino.grupo}">Grupo</div>
-              </td>
-
-              <td class="py-4 px-4 text-center">
-                <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Lunes'"
-                       th:checked="${nino.tieneAsistencia('Lunes')}"
-                       class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
-              </td>
-              <td class="py-4 px-4 text-center">
-                <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Martes'"
-                       th:checked="${nino.tieneAsistencia('Martes')}"
-                       class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
-              </td>
-              <td class="py-4 px-4 text-center">
-                <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Miercoles'"
-                       th:checked="${nino.tieneAsistencia('Miercoles')}"
-                       class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
-              </td>
-              <td class="py-4 px-4 text-center">
-                <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Jueves'"
-                       th:checked="${nino.tieneAsistencia('Jueves')}"
-                       class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
-              </td>
-              <td class="py-4 px-4 text-center">
-                <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Viernes'"
-                       th:checked="${nino.tieneAsistencia('Viernes')}"
-                       class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
-              </td>
-            </tr>
-
-            </tbody>
-          </table>
+        <div class="flex items-center gap-3">
+          <label class="text-sm font-medium text-gray-600 whitespace-nowrap">Grupo:</label>
+          <select x-model="grupoSeleccionado"
+                  class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            <option value="">Todos los grupos</option>
+            <option value="Preescolar">Preescolar</option>
+            <option value="Primaria Menor">Primaria Menor</option>
+            <option value="Primaria Mayor">Primaria Mayor</option>
+          </select>
         </div>
       </div>
 
-      <div class="flex justify-end pt-2">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm">
-          <i class="bi bi-cloud-arrow-up text-base"></i>
-          <span>Guardar Asistencia</span>
-        </button>
-      </div>
+      <form th:action="@{/asistencia/guardar}" method="POST" class="space-y-6">
 
-    </form>
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse align-middle">
+              <thead class="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <tr>
+                <th class="py-4 px-6 text-center w-16">#</th>
+                <th class="py-4 px-6">Nombre del Alumno</th>
+                <th class="py-4 px-4 text-center w-24">Lun</th>
+                <th class="py-4 px-4 text-center w-24">Mar</th>
+                <th class="py-4 px-4 text-center w-24">Mié</th>
+                <th class="py-4 px-4 text-center w-24">Jue</th>
+                <th class="py-4 px-4 text-center w-24">Vie</th>
+              </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 text-sm text-gray-700 font-medium">
 
-  </div>
+              <tr th:if="${#lists.isEmpty(ninos)}">
+                <td colspan="7" class="py-10 text-center text-gray-400">
+                  <i class="bi bi-people text-3xl block mb-2"></i>
+                  No hay niños activos registrados para el pase de lista.
+                </td>
+              </tr>
+
+              <tr th:each="nino, iter : ${ninos}"
+                  th:data-grupo="${nino.grupo}"
+                  x-show="grupoSeleccionado === '' || grupoSeleccionado.trim().toLowerCase() === $el.getAttribute('data-grupo').trim().toLowerCase()"
+                  x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 transform -translate-y-1"
+                  x-transition:enter-end="opacity-100 transform translate-y-0"
+                  class="hover:bg-slate-50/80 transition-colors">
+
+                <td class="py-4 px-6 text-center text-gray-400 font-mono" th:text="${iter.count}">1</td>
+
+                <td class="py-4 px-6">
+                  <div class="font-semibold text-gray-900" th:text="${nino.nombreCompleto}">Nombre del Alumno</div>
+                  <div class="text-xs text-gray-400 font-normal mt-0.5" th:text="${nino.grupo}">Grupo</div>
+                </td>
+
+                <td class="py-4 px-4 text-center">
+                  <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Lunes'"
+                         th:checked="${nino.tieneAsistencia('Lunes')}"
+                         class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Martes'"
+                         th:checked="${nino.tieneAsistencia('Martes')}"
+                         class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Miercoles'"
+                         th:checked="${nino.tieneAsistencia('Miercoles')}"
+                         class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Jueves'"
+                         th:checked="${nino.tieneAsistencia('Jueves')}"
+                         class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <input type="checkbox" th:name="'asistencia_' + ${nino.id} + '_Viernes'"
+                         th:checked="${nino.tieneAsistencia('Viernes')}"
+                         class="w-6 h-6 text-blue-600 border-gray-300 rounded cursor-pointer focus:ring-blue-500">
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm">
+            <i class="bi bi-cloud-arrow-up text-base"></i>
+            <span>Guardar Asistencia</span>
+          </button>
+        </div>
+      </form>
+
+    </div> </div>
 </div>
