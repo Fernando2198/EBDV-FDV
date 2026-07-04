@@ -60,6 +60,11 @@ public class AppController {
         return "inicio";
     }
 
+    @GetMapping("/login")
+    public String mostrarLogin() {
+        return "login";
+    }
+
     @GetMapping("/registro")
     public String registro(Model model) {
         Nino nino = new Nino();
