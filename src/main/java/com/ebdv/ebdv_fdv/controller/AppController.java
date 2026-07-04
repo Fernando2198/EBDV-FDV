@@ -41,7 +41,22 @@ public class AppController {
                 .sorted((n1,n2) -> n1.getNombreCompleto().compareToIgnoreCase(n2.getNombreCompleto()))
                 .collect(Collectors.toList());
 
+        long totalInscritos = ninosOrdenados.size();
+        long totalPreescolares = ninosOrdenados.stream()
+                        .filter(n -> n.getGrupo() != null && n.getGrupo().equalsIgnoreCase("Preescolares")).count();
+
+        long totalEscolares = ninosOrdenados.stream()
+                .filter(n -> n.getGrupo() != null && n.getGrupo().equalsIgnoreCase("Escolares")).count();
+
+        long totalJovenes = ninosOrdenados.stream()
+                .filter(n -> n.getGrupo() != null && n.getGrupo().equalsIgnoreCase("Jóvenes")).count();
+
         model.addAttribute("ninos", ninosOrdenados);
+        model.addAttribute("totalInscritos", totalInscritos);
+        model.addAttribute("totalPreescolares", totalPreescolares);
+        model.addAttribute("totalEscolares", totalEscolares);
+        model.addAttribute("totalJovenes", totalJovenes);
+
         return "inicio";
     }
 
