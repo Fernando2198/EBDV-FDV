@@ -41,5 +41,4 @@ build/
 Thumbs.db
 desktop.ini
 
-###Archivo para la conf de la base de datos ###
-src/main/resources/application.properties
+
