@@ -6,16 +6,18 @@ import com.ebdv.ebdv_fdv.model.Tutor;
 import com.ebdv.ebdv_fdv.repository.NinoRepository;
 import com.ebdv.ebdv_fdv.repository.TutorRepository;
 import com.ebdv.ebdv_fdv.repository.AsistenciaRepository;
+
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -112,6 +114,34 @@ public class AppController {
         }
         model.addAttribute("nino", nino);
         return "registro";
+    }
+
+    @PostMapping("api/asistencia/marcar")
+    @ResponseBody
+    public ResponseEntity<String> marcarAsistencia(@RequestParam("ninoId") Long ninoId, @RequestParam("asistio") boolean asistio, @RequestParam("dia") String dia) {
+        try{
+            Nino nino = ninoRepository.findById(ninoId).orElseThrow(() -> new RuntimeException("Nino encontrado"));
+
+            Optional<Asistencia> asistenciaOpt = asistenciaRepository.findByNinoAndDiaSemana(nino, dia);
+
+            if (asistenciaOpt.isPresent()) {
+                Asistencia asistencia = asistenciaOpt.get();
+                asistencia.setAsistio(asistio);
+                asistencia.setFecha(LocalDate.now());
+                asistenciaRepository.save(asistencia);
+            } else{
+                Asistencia nuevaAsistencia = new Asistencia();
+                nuevaAsistencia.setNino(nino);
+                nuevaAsistencia.setDiaSemana(dia);
+                nuevaAsistencia.setAsistio(asistio);
+                asistenciaRepository.save(nuevaAsistencia);
+            }
+            return ResponseEntity.ok("Guardado correctamente");
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar");
+        }
     }
 
     @GetMapping("/asistencia")
