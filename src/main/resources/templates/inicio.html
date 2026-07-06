@@ -1,4 +1,4 @@
-<div th:replace="~{base :: html}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{base :: html}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
   <div th:fragment="content" class="max-w-6xl mx-auto space-y-6">
 
@@ -23,7 +23,7 @@
         <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Alumnos Inscritos</h1>
         <p class="text-sm text-gray-500 mt-1">Lista general ordenada alfabéticamente para el control de la EBDV.</p>
       </div>
-      <div>
+      <div sec:authorize="hasRole('ADMIN')">
         <a th:href="@{/registro}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow-sm transition-all flex items-center gap-2">
           <i class="bi bi-person-plus-fill"></i>
           <span>Nuevo Registro</span>
@@ -32,7 +32,6 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
       <div class="bg-white border border-gray-200 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
         <div class="bg-blue-50 text-blue-600 rounded-xl p-3.5 flex items-center justify-center shadow-inner">
           <i class="bi bi-people-fill text-2xl"></i>
@@ -72,7 +71,6 @@
           <h3 class="text-2xl font-bold text-gray-900 mt-0.5" th:text="${totalJovenes}">0</h3>
         </div>
       </div>
-
     </div>
 
     <div x-data="{ openBaja: false, formToSubmit: null, busqueda: '' }" class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
@@ -96,13 +94,13 @@
             <th class="py-4 px-6 text-center w-16">#</th>
             <th class="py-4 px-6">Alumno</th>
             <th class="py-4 px-6">Tutor / Contacto</th>
-            <th class="py-4 px-6 text-center w-44">Acciones</th>
+            <th sec:authorize="hasRole('ADMIN')" class="text-center px-6 w-32">Acciones</th>
           </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 text-sm text-gray-700 font-medium">
 
           <tr th:if="${#lists.isEmpty(ninos)}">
-            <td colspan="4" class="py-10 text-center text-gray-400">
+            <td th:colspan="${#authorization.expression('hasRole(''ADMIN'')')} ? 4 : 3" class="py-10 text-center text-gray-400">
               <i class="bi bi-people text-3xl block mb-2"></i>
               No hay niños inscritos de momento.
             </td>
@@ -134,7 +132,7 @@
               </div>
             </td>
 
-            <td class="py-4 px-6 text-center">
+            <td sec:authorize="hasRole('ADMIN')" class="py-4 px-6 text-center">
               <div class="flex items-center justify-center gap-2">
                 <a th:href="@{/registro/editar/{id}(id=${nino.id})}" title="Editar datos"
                    class="text-blue-600 hover:text-blue-700 hover:bg-blue-50 p-2 rounded-xl transition-all flex items-center justify-center border border-transparent hover:border-blue-100">
@@ -155,7 +153,7 @@
           </tbody>
         </table>
 
-        <div x-show="openBaja" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div x-show="openBaja" sec:authorize="hasRole('ADMIN')" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
           <div x-show="openBaja" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/40 backdrop-blur-sm" @click="openBaja = false"></div>
           <div x-show="openBaja" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="relative bg-white border border-gray-100 rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center space-y-4 z-10 border-t-4 border-t-red-500">
             <div class="bg-red-50 text-red-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-inner">

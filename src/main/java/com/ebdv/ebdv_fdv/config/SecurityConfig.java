@@ -1,5 +1,6 @@
 package com.ebdv.ebdv_fdv.config;
 
+import com.ebdv.ebdv_fdv.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,12 @@ import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -36,25 +43,14 @@ public class SecurityConfig {
     private String admin2Pass;
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails admin1 = User.withUsername(admin1User)
-                .password(encoder.encode(admin1Pass))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails admin2 = User.withUsername(admin2User)
-                .password(encoder.encode(admin2Pass))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin1, admin2);
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/api/asistencia/**").permitAll()
-                        .requestMatchers("/api/asistencia/**").hasRole("ADMIN")
+                        .requestMatchers("/api/asistencia/**").hasRole("ADMIN") //Permisos para la asistencia, ambos roles pueden entrar y marcar asistencia
+                        .requestMatchers("/api/asistencia/**").hasAnyRole("ADMIN", "MAESTRO")
+                        .requestMatchers("/alumnos/nuevo", "/alumnos/editar/**", "/alumnos/eliminar/**").hasRole("ADMIN")//Permisos solo para el admin
+                        .requestMatchers("/usuarios/**", "/configuracion/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

@@ -1,6 +1,6 @@
-<div th:replace="~{base :: html}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{base :: html}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-  <div th:fragment="content" class="max-w-3xl mx-auto space-y-6">
+  <div th:fragment="content" sec:authorize="hasRole('ADMIN')" class="max-w-3xl mx-auto space-y-6">
 
     <div class="border-b border-gray-200 pb-4">
       <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Registro de Nuevo Participante</h1>
@@ -11,7 +11,6 @@
 
       <input type="hidden" th:field="*{id}" />
       <input type="hidden" th:field="*{tutor.id}" />
-
 
       <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
         <h2 class="text-lg font-semibold text-blue-600 flex items-center gap-2">
@@ -70,13 +69,11 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Dirección del Tutor</label>
             <input type="text" th:field="*{tutor.direccion}" required placeholder="Ej. Calle Ixtlahuaca..."
                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
           </div>
-
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -88,7 +85,7 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Red Social(Instagram, Facebook...)</label>
-            <input type="tel" th:field="*{tutor.redSocial}" required placeholder="red_social"
+            <input type="text" th:field="*{tutor.redSocial}" required placeholder="red_social"
                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
           </div>
         </div>
@@ -104,6 +101,21 @@
         </button>
       </div>
     </form>
-
   </div>
+
+  <div th:fragment="content" sec:authorize="hasRole('MAESTRO')" class="max-w-md mx-auto text-center py-12 space-y-4">
+    <div class="bg-red-50 text-red-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-inner">
+      <i class="bi bi-shield-lock-fill text-3xl"></i>
+    </div>
+    <div class="space-y-1">
+      <h3 class="text-xl font-bold text-gray-900">Acceso No Autorizado</h3>
+      <p class="text-sm text-gray-500">Lo sentimos, la creación y edición de participantes está reservada exclusivamente para el rol de Administrador.</p>
+    </div>
+    <div class="pt-2">
+      <a th:href="@{/asistencia}" class="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition-colors shadow-sm">
+        Ir a Control de Asistencia
+      </a>
+    </div>
+  </div>
+
 </div>
