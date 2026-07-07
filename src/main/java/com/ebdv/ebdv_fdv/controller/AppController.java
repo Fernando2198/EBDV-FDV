@@ -90,7 +90,7 @@ public class AppController {
 
         }catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "hubo un problema al guardar el registro");
-            return "inicio";
+            return "redirect:/";
         }
     }
 
