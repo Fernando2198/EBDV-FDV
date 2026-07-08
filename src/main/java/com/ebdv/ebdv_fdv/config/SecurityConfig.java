@@ -30,16 +30,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Value("${app.security.admin1.user}")
+    @Value("${app.security.admin.user}")
     private String admin1User;
 
-    @Value("${app.security.admin1.pass}")
+    @Value("${app.security.admin.pass}")
     private String admin1Pass;
 
-    @Value("${app.security.admin2.user}")
+    @Value("${app.security.maestro.user}")
     private String admin2User;
 
-    @Value("${app.security.admin2.pass}")
+    @Value("${app.security.maestro.pass}")
     private String admin2Pass;
 
     @Bean
