@@ -44,24 +44,20 @@ public class DataInitializer implements CommandLineRunner {
         Rol rolMaestro = rolRepository.findByNombre("ROLE_MAESTRO")
                 .orElseGet(() -> rolRepository.save(new Rol("ROLE_MAESTRO")));
 
-        // Crear Administrador por defecto si no existe
-        if (usuarioRepository.findByUsername(adminUser).isEmpty()) {
-            Usuario admin = new Usuario();
-            admin.setUsername(adminUser);
-            admin.setPassword(passwordEncoder.encode(adminPass)); // Contraseña encriptada
-            admin.setRoles(Set.of(rolAdmin));
-            usuarioRepository.save(admin);
-            System.out.println("Usuario 'admin' creado con éxito.");
-        }
+        // 2. Crear o Actualizar Administrador
+        Usuario admin = usuarioRepository.findByUsername(adminUser).orElseGet(Usuario::new);
+        admin.setUsername(adminUser);
+        admin.setPassword(passwordEncoder.encode(adminPass));
+        admin.setRoles(Set.of(rolAdmin));
+        usuarioRepository.save(admin);
 
-        // Crear Maestro por defecto si no existe
-        if (usuarioRepository.findByUsername(maestroUser).isEmpty()) {
-            Usuario maestro = new Usuario();
-            maestro.setUsername(maestroUser);
-            maestro.setPassword(passwordEncoder.encode(maestroPass)); // Contraseña encriptada
-            maestro.setRoles(Set.of(rolMaestro));
-            usuarioRepository.save(maestro);
-            System.out.println("Usuario 'maestro' creado con éxito.");
-        }
+        // 3. Crear o Actualizar Maestro
+        Usuario maestro = usuarioRepository.findByUsername(maestroUser).orElseGet(Usuario::new);
+        maestro.setUsername(maestroUser);
+        maestro.setPassword(passwordEncoder.encode(maestroPass));
+        maestro.setRoles(Set.of(rolMaestro));
+        usuarioRepository.save(maestro);
+
+        System.out.println("Usuarios por defecto sincronizados correctamente.");
     }
 }

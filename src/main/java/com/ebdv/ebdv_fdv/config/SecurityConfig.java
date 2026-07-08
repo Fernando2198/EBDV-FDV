@@ -46,11 +46,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/api/asistencia/**").permitAll()
-                        .requestMatchers("/api/asistencia/**").hasRole("ADMIN") //Permisos para la asistencia, ambos roles pueden entrar y marcar asistencia
-                        .requestMatchers("/api/asistencia/**").hasAnyRole("ADMIN", "MAESTRO")
-                        .requestMatchers("/alumnos/nuevo", "/alumnos/editar/**", "/alumnos/eliminar/**").hasRole("ADMIN")//Permisos solo para el admin
+                        .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        //  Rutas exclusivas del ADMINISTRADOR
+                        .requestMatchers("/alumnos/nuevo", "/alumnos/editar/**", "/alumnos/eliminar/**").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**", "/configuracion/**").hasRole("ADMIN")
+
+                        //  Rutas compartidas entre ADMIN y MAESTRO
+                        .requestMatchers("/api/asistencia/**").hasAnyRole("ADMIN", "MAESTRO")
                 .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
