@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public interface NinoRepository extends JpaRepository <Nino, Long> {
+    List<Nino> findByActivoTrue();
     List<Nino> findByNombreCompletoContainingIgnoreCase(String nombre);
     List<Nino> findByGrupo(String grupo);
 }

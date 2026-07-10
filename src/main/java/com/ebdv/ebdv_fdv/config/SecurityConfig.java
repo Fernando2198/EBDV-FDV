@@ -48,7 +48,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         //  Rutas exclusivas del ADMINISTRADOR
-                        .requestMatchers("/alumnos/nuevo", "/alumnos/editar/**", "/alumnos/eliminar/**").hasRole("ADMIN")
+                        .requestMatchers("/alumnos/nuevo", "/alumnos/editar/**", "/alumnos/eliminar/**", "/registro/archivar/**").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**", "/configuracion/**").hasRole("ADMIN")
 
                         //  Rutas compartidas entre ADMIN y MAESTRO

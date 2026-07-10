@@ -103,7 +103,7 @@ public class AppController {
             redirectAttributes.addFlashAttribute("registroExitoso", true);
             redirectAttributes.addFlashAttribute("mensaje", "El alumno fue dado de baja correctamente");
         }
-        return "redirect:/inicio";
+        return "redirect:/";
     }
 
     @GetMapping("/registro/editar/{id}")
